@@ -5,10 +5,10 @@ window.uetq = window.uetq || [];
     var checkoutData = null;
 
     // 🔹 1. Revisar objetos globales comunes
-    if (window.__stencilData?.page?.order) {
-      checkoutData = window.__stencilData.page.order;
-    } else if (window.__stencilData?.page?.checkout) {
+    if (window.__stencilData?.page?.checkout) {
       checkoutData = window.__stencilData.page.checkout;
+    } else if (window.__stencilData?.page?.order) {
+      checkoutData = window.__stencilData.page.order;
     } else if (window.orderConfirmation) {
       checkoutData = window.orderConfirmation;
     }
@@ -50,15 +50,10 @@ window.uetq = window.uetq || [];
       order_id: orderId.toString()
     });
 
-    console.log("UET: Purchase event pushed ✅", {
-      orderId: orderId,
-      amount: amount,
-      currency: currency
-    });
+    console.log("UET: Purchase event pushed ✅", { orderId, amount, currency });
 
   } catch (err) {
     console.error("UET: Script error", err);
   }
 })();
-
 
