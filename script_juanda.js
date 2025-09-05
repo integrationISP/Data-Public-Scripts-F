@@ -1,21 +1,26 @@
 window.uetq = window.uetq || [];
-// Esperamos a que el DOM cargue
+
 (function () {
   try {
-    // BigCommerce expone variables globales en order confirmation:
-    // window.__stencilData?.page?.checkout
-    var checkoutData = window.__stencilData?.page?.checkout;
+    // 🔹 Detectar el objeto que contiene los datos de la orden
+    var checkoutData = window.__stencilData?.page?.order || window.orderConfirmation || null;
 
-    if (!checkoutData || !checkoutData.order) {
+    if (!checkoutData) {
       console.warn("UET: No order data found");
       return;
     }
 
-    var orderId = checkoutData.order.orderId || "";
-    var amount = checkoutData.order.orderAmount || 0;
-    var currency = checkoutData.order.currency?.code || "USD";
+    // 🔹 Obtener datos de la orden
+    var orderId = checkoutData.orderId || "";
+    var amount = checkoutData.orderAmount || checkoutData.baseAmount || 0;
+    var currency = checkoutData.currency?.code || "USD";
 
-    // 🚀 Enviar evento a Bing UET
+    if (!orderId || !amount) {
+      console.warn("UET: Order data incomplete", { orderId, amount, currency });
+      return;
+    }
+
+    // 🔹 Enviar evento a Bing UET
     window.uetq.push('event', 'purchase', {
       revenue_value: amount,
       currency: currency,
